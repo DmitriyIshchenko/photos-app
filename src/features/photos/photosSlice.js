@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchImagesAsync, fetchPhotoContentAsync } from "./photosAPI";
+import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import { fetchImages, fetchPhotoContent, postComment } from "./photosAPI";
 
 const initialState = {
     items: [],
@@ -7,14 +7,21 @@ const initialState = {
     error: null
 };
 
-export const fetchImages = createAsyncThunk("photos/fetchImages", async () => {
-    const response = await fetchImagesAsync();
+export const fetchImagesAsync = createAsyncThunk("photos/fetchImagesAsync", async () => {
+    const response = await fetchImages();
     return response;
 })
 
-export const fetchPhotoContent = createAsyncThunk("photos/fetchPhotoContent", async (id) => {
-    const response = await fetchPhotoContentAsync(id);
+export const fetchPhotoContentAsync = createAsyncThunk("photos/fetchPhotoContentAsync", async (photoId) => {
+    const response = await fetchPhotoContent(photoId);
     return response;
+})
+
+export const postCommentAsync = createAsyncThunk("photos/postComment", async (data) => {
+    const response = await postComment(data);
+    if (response.ok) {
+        return data
+    } else return response;
 })
 
 const photosSlice = createSlice({
@@ -25,26 +32,38 @@ const photosSlice = createSlice({
     },
     extraReducers(buider) {
         buider
-            .addCase(fetchImages.pending, (state) => {
+            .addCase(fetchImagesAsync.pending, (state) => {
                 state.status = "loading";
             })
-            .addCase(fetchImages.fulfilled, (state, action) => {
+            .addCase(fetchImagesAsync.fulfilled, (state, action) => {
                 state.status = "succeeded";
                 state.items = state.items.concat(action.payload);
             })
-            .addCase(fetchImages.rejected, (state, action) => {
+            .addCase(fetchImagesAsync.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.error.message;
             })
-            .addCase(fetchPhotoContent.pending, (state) => {
+            .addCase(fetchPhotoContentAsync.pending, (state) => {
                 state.status = "loading";
             })
-            .addCase(fetchPhotoContent.fulfilled, (state, action) => {
+            .addCase(fetchPhotoContentAsync.fulfilled, (state, action) => {
                 state.status = "succeeded"
                 const { id, url: urlBig, comments } = action.payload;
                 const photo = state.items.find(item => item.id == id);
                 photo.urlBig = urlBig;
                 photo.comments = comments;
+            })
+            .addCase(postCommentAsync.fulfilled, (state, action) => {
+                const { photoId, comment } = action.payload;
+                const photo = state.items.find(item => item.id == photoId);
+                photo.comments.push({
+                    id: nanoid(),
+                    text: comment,
+                    date: Date.now()
+                })
+            })
+            .addCase(postCommentAsync.rejected, (state, action) => {
+                state.error = action.error.message;
             })
     }
 })

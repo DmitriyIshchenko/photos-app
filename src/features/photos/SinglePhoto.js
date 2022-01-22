@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { fetchPhotoContent, selectPhotoById } from './photosSlice';
+import { fetchPhotoContentAsync, postCommentAsync, selectPhotoById } from './photosSlice';
 
 const formatDate = timestamp => {
     const date = new Date(timestamp);
@@ -17,9 +17,20 @@ export default function SinglePhoto() {
     const photo = useSelector((state) => selectPhotoById(state, photoId));
     const status = useSelector((state) => state.photos.status);
 
+    const [name, setName] = useState("");
+    const [comment, setComment] = useState("");
+
+    const onSubmitCommentClicked = () => {
+        if (name && comment) {
+            dispatch(postCommentAsync({ photoId, name, comment }))
+        }
+        setName("");
+        setComment("");
+    }
+
     useEffect(() => {
         if (photo && !photo.urlBig) {
-            dispatch(fetchPhotoContent(photoId));
+            dispatch(fetchPhotoContentAsync(photoId));
         }
     }, [])
 
@@ -35,9 +46,9 @@ export default function SinglePhoto() {
                     <img src={photo.urlBig} alt="big photo" />
                 </article>
                 <article>
-                    <input type="text" />
-                    <input type="text" />
-                    <button>Оставить комментарий</button>
+                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                    <input type="text" value={comment} onChange={(e) => setComment(e.target.value)} />
+                    <button onClick={onSubmitCommentClicked}>Оставить комментарий</button>
                 </article>
                 <article>
                     <ul>
