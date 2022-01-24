@@ -1,0 +1,34 @@
+.App {
+    background: white;
+}
+
+h1 {
+    margin: 0px;
+    padding: 30px;
+    text-align: center;
+}
+
+footer {
+    height: 56px;
+    text-align: center;
+    margin: 20px 20px 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #CCCCCC;
+    color: #CCCCCC;
+}
+
+@media screen and (min-width: 768px) {
+    .App {
+        margin: auto;
+        width: 768px;
+        height: 100vh;
+    }
+
+    footer {
+        position: fixed;
+        bottom: 0;
+        width: 728px;
+    }
+}
