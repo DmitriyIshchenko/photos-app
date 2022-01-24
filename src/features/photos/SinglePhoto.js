@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { fetchPhotoContentAsync, postCommentAsync, selectPhotoById } from './photosSlice';
 
 const formatDate = timestamp => {
@@ -9,11 +8,10 @@ const formatDate = timestamp => {
     return formated.map(item => item < 10 ? "0" + item : item).join(".")
 }
 
-export default function SinglePhoto() {
+export default function SinglePhoto({ photoId, handleHideModal }) {
 
     const dispatch = useDispatch();
 
-    const photoId = +useParams().photoId;
     const photo = useSelector((state) => selectPhotoById(state, photoId));
     const status = useSelector((state) => state.photos.status);
 
@@ -32,7 +30,7 @@ export default function SinglePhoto() {
         if (photo && !photo.urlBig) {
             dispatch(fetchPhotoContentAsync(photoId));
         }
-    }, [])
+    }, [dispatch, photo, photoId])
 
     if (!photo) {
         return <section>error</section>
@@ -42,8 +40,9 @@ export default function SinglePhoto() {
     } else if (status === "succeeded") {
         return (
             <section>
+                <button onClick={handleHideModal}>X</button>
                 <article>
-                    <img src={photo.urlBig} alt="big photo" />
+                    <img src={photo.urlBig} alt="bigger" />
                 </article>
                 <article>
                     <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
@@ -64,3 +63,4 @@ export default function SinglePhoto() {
         )
     }
 }
+
