@@ -6,6 +6,9 @@ import { fetchImagesAsync, selectAllPhotos } from './photosSlice';
 import Modal from './Modal';
 import SinglePhoto from './SinglePhoto';
 
+import "../../styles/PhotosList.css"
+import "../../styles/Modal.css"
+
 export default function PhotosList() {
 
     const dispatch = useDispatch();
@@ -32,7 +35,7 @@ export default function PhotosList() {
     }, [status, dispatch])
 
     const content = photos.map(item => {
-        return <article key={item.id}  >
+        return <article className='img-container' key={item.id}  >
             <img src={item.url} alt="preview" photoid={item.id} onClick={(e) => handleShowModal(e)} />
         </article>
     })
@@ -42,7 +45,7 @@ export default function PhotosList() {
             <SinglePhoto photoId={+targetPhoto} handleHideModal={handleHideModal} /></div>
     </Modal>) : null;
 
-    return <section className='list-container'>
+    return <section className="list-container" >
         {modal}
         {content}</section>;
 }

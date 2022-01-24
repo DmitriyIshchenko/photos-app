@@ -1,0 +1,131 @@
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.single-photo-container {
+    height: 100vh;
+    display: flex;
+    flex-flow: column;
+    position: relative;
+    background: white;
+    font-size: 13px;
+    font-family: "Roboto";
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 18px;
+    height: 18px;
+    ;
+}
+
+.close:before, .close:after {
+    position: absolute;
+    left: 8px;
+    content: ' ';
+    height: 24px;
+    width: 1px;
+    background-color: black;
+}
+
+.close:before {
+    transform: rotate(45deg);
+}
+
+.close:after {
+    transform: rotate(-45deg);
+}
+
+.comments-list {
+    overflow: scroll;
+    flex-grow: 1;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.comment-container {
+    margin: 20px;
+}
+
+.comment-date {
+    color: #999999;
+    margin: 0;
+}
+
+.comment-text {
+    margin-top: 5px;
+}
+
+.leave-comment-container {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+}
+
+input, .btn-leave-comment {
+    height: 30px;
+    border-radius: 3px;
+    box-sizing: border-box;
+    margin: 10px 0 10px 0;
+    border: 1px solid #CCCCCC;
+    padding-left: 10px;
+}
+
+input::placeholder {
+    color: #CCCCCC;
+}
+
+.btn-leave-comment {
+    background: #4997D0;
+    border: none;
+    color: white;
+}
+
+@media screen and (min-width: 768px) {
+    .modal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .single-photo-container {
+        width: 619px;
+        height: 425px;
+        display: grid;
+        grid-template-columns: 60% 1fr;
+        grid-template-rows: 60% 1fr;
+        grid-template-areas:
+            "big-img-container comments-list"
+            "leave-comment-container comments-list";
+    }
+
+    .big-img-container {
+        grid-area: big-img-container;
+        margin: 30px 20px 20px 20px;
+    }
+
+    .leave-comment-container {
+        grid-area: leave-comment-container;
+        margin: 0 20px 0 20px;
+    }
+
+    .comments-list {
+        grid-area: comments-list;
+        margin: 30px 0 30px 0;
+    }
+
+    li {
+        margin: 0px !important;
+    }
+}

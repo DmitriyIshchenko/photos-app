@@ -30,36 +30,46 @@ export default function SinglePhoto({ photoId, handleHideModal }) {
         if (photo && !photo.urlBig) {
             dispatch(fetchPhotoContentAsync(photoId));
         }
+        document.body.style.overflow = 'hidden';
+        return function cleanup() {
+            document.body.style.overflow = '';
+        }
     }, [dispatch, photo, photoId])
 
     if (!photo) {
         return <section>error</section>
     }
     if (status === "loading") {
-        return (<section><h2>loading...</h2></section>)
+        return (<section className='single-photo-container'><h2>loading...</h2></section>)
     } else if (status === "succeeded") {
         return (
-            <section>
-                <button onClick={handleHideModal}>X</button>
-                <article>
+            <section className='single-photo-container'>
+
+                <div className="close" onClick={handleHideModal}>
+                </div>
+
+                <article className='big-img-container'>
                     <img src={photo.urlBig} alt="bigger" />
                 </article>
-                <article>
-                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-                    <input type="text" value={comment} onChange={(e) => setComment(e.target.value)} />
-                    <button onClick={onSubmitCommentClicked}>Оставить комментарий</button>
-                </article>
-                <article>
+
+                <article className='comments-list'>
                     <ul>
                         {photo.comments && photo.comments.map(item => {
-                            return (<li key={item.id}>
-                                <p>{formatDate(item.date)}</p>
-                                <p>{item.text}</p>
+                            return (<li key={item.id} className='comment-container'>
+                                <p className='comment-date'>{formatDate(item.date)}</p>
+                                <p className='comment-text'>{item.text}</p>
                             </li>)
                         })}
                     </ul>
                 </article>
-            </section>
+
+                <article className='leave-comment-container'>
+                    <input type="text" placeholder="Ваше имя" value={name} onChange={(e) => setName(e.target.value)} />
+                    <input type="text" placeholder="Ваш комментарий" value={comment} onChange={(e) => setComment(e.target.value)} />
+                    <button className="btn-leave-comment" onClick={onSubmitCommentClicked}>Оставить комментарий</button>
+                </article>
+
+            </section >
         )
     }
 }
