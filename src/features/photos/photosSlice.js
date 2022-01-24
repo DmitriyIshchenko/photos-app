@@ -4,6 +4,7 @@ import { fetchImages, fetchPhotoContent, postComment } from "./photosAPI";
 const initialState = {
     items: [],
     status: "idle",
+    singlePhotoStatus: "idle",
     error: null
 };
 
@@ -44,18 +45,18 @@ const photosSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(fetchPhotoContentAsync.pending, (state) => {
-                state.status = "loading";
+                state.singlePhotoStatus = "loading";
             })
             .addCase(fetchPhotoContentAsync.fulfilled, (state, action) => {
-                state.status = "succeeded"
+                state.singlePhotoStatus = "succeeded"
                 const { id, url: urlBig, comments } = action.payload;
-                const photo = state.items.find(item => item.id == id);
+                const photo = state.items.find(item => item.id === id);
                 photo.urlBig = urlBig;
                 photo.comments = comments;
             })
             .addCase(postCommentAsync.fulfilled, (state, action) => {
                 const { photoId, comment } = action.payload;
-                const photo = state.items.find(item => item.id == photoId);
+                const photo = state.items.find(item => item.id === photoId);
                 photo.comments.push({
                     id: nanoid(),
                     text: comment,

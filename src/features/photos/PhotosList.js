@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { fetchImagesAsync, selectAllPhotos } from './photosSlice';
 import Modal from './Modal';
 import SinglePhoto from './SinglePhoto';
+import Spinner from './Spinner';
 
 import "../../styles/PhotosList.css"
 import "../../styles/Modal.css"
@@ -19,7 +20,6 @@ export default function PhotosList() {
     const [showModal, setShowModal] = useState(false);
     const [targetPhoto, setTargetPhoto] = useState("");
     const handleShowModal = (e) => {
-        console.log(e)
         const photoId = e.target.attributes.photoid.value;
         setTargetPhoto(photoId)
         setShowModal(true);
@@ -34,9 +34,13 @@ export default function PhotosList() {
         }
     }, [status, dispatch])
 
+    if (status === "loading") {
+        return <Spinner />
+    }
+
     const content = photos.map(item => {
         return <article className='img-container' key={item.id}  >
-            <img src={item.url} alt="preview" photoid={item.id} onClick={(e) => handleShowModal(e)} />
+            <img src={item.url} alt="" photoid={item.id} onClick={(e) => handleShowModal(e)} />
         </article>
     })
 
