@@ -44,7 +44,7 @@
 }
 
 .comments-list {
-    overflow: scroll;
+    overflow: auto;
     flex-grow: 1;
 }
 
